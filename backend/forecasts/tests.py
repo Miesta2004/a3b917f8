@@ -121,3 +121,24 @@ class ApiTests(SimpleTestCase):
 
     def test_meta(self, _):
         self.assertEqual(self.client.get("/api/meta/").json()["default_cutoff"], "09:00")
+
+
+@patch("forecasts.views.get_dataset", side_effect=lambda: dataset())
+class VercelPathTests(SimpleTestCase):
+    """Vercel sends every request to /api/index and keeps the real path in ?__path=."""
+
+    client = APIClient()
+
+    def test_real_path_is_restored(self, _):
+        r = self.client.get("/api/index", {"__path": "api/meta/"})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.json()["default_cutoff"], "09:00")
+
+    def test_other_parameters_are_kept_and_missing_slash_is_tolerated(self, _):
+        r = self.client.get("/api/index", {"__path": "api/forecast", "delivery_date": "2026-01-15"})
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.json()["decision_deadline"], "2026-01-14T09:00:00Z")
+
+    def test_without_the_parameter_nothing_changes(self, _):
+        self.assertEqual(self.client.get("/api/index").status_code, 404)
+        self.assertEqual(self.client.get("/api/meta/").status_code, 200)
