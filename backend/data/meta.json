@@ -1,0 +1,11 @@
+{
+  "source": "Elexon BMRS (FUELHH, WINDFOR). Contains BMRS data (c) Elexon Limited.",
+  "ingested_at": "2026-10-31T14:15:15.602252+00:00",
+  "decisions": [
+    "2026-01-01",
+    "2026-01-31"
+  ],
+  "max_horizon_hours": 72,
+  "actual_rows": 1488,
+  "forecast_rows": 14287
+}
