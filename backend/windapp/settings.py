@@ -23,6 +23,7 @@ INSTALLED_APPS = [
 
 # Code that wraps every request. CORS first, so it can answer browser pre-flight checks.
 MIDDLEWARE = [
+    "windapp.middleware.RestoreOriginalPathMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
 ]
