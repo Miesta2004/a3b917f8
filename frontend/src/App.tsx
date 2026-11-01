@@ -1,35 +1,34 @@
 import { useEffect, useState } from "react";
-import { getForecast, getMeta, type ForecastResponse, type Meta } from "./api";
+import { getMeta, type Meta } from "./api";
+import ForecastView from "./components/ForecastView";
+import "./App.css";
 
-// Temporary page: checks that the front end can talk to the API.
 export default function App() {
-  const [meta, setMeta] = useState<Meta | null>(null);
-  const [forecast, setForecast] = useState<ForecastResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+    const [meta, setMeta] = useState<Meta | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    Promise.all([getMeta(), getForecast("2026-01-15")])
-        .then(([m, f]) => {
-          setMeta(m);
-          setForecast(f);
-        })
-        .catch((e: Error) => setError(e.message));
-  }, []);
+    useEffect(() => {
+        getMeta()
+            .then(setMeta)
+            .catch((e: Error) => setError(e.message));
+    }, []);
 
-  if (error) return <p>Erreur : {error}</p>;
-  if (!meta || !forecast) return <p>Chargement…</p>;
-
-  return (
-      <main style={{ padding: 24, fontFamily: "system-ui" }}>
-        <h1>Connexion à l’API</h1>
-        <p>
-          Livraisons couvertes : {meta.delivery_window[0]} → {meta.delivery_window[1]}
-        </p>
-        <p>Échéance d’achat du 15 janvier : {forecast.decision_deadline}</p>
-        <p>
-          Créneaux : {forecast.points.length}, sans prévision : {forecast.summary.slots_without_forecast}
-        </p>
-        <p>Prévision moyenne : {forecast.summary.mean_forecast_mw} MW</p>
-      </main>
-  );
+    return (
+        <main className="page">
+            <h1>Wind forecasts for day-ahead purchases</h1>
+            <p className="lead">
+                UK wind generation, January 2026: the forecast the buyer could see when deciding, and how accurate it turned
+                out to be.
+            </p>
+            {error && <p className="error">Could not reach the API: {error}</p>}
+            {!meta && !error && <p>Loading…</p>}
+            {meta && (
+                <ForecastView
+                    minDate={meta.delivery_window[0]}
+                    maxDate={meta.delivery_window[1]}
+                    defaultCutoff={meta.default_cutoff}
+                />
+            )}
+        </main>
+    );
 }

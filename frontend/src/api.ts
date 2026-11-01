@@ -66,5 +66,10 @@ export const getMeta = () => get<Meta>("meta");
 export const getForecast = (deliveryDate: string, cutoff?: string) =>
     get<ForecastResponse>("forecast", { delivery_date: deliveryDate, ...(cutoff ? { cutoff } : {}) });
 
-export const getAccuracy = (cutoff?: string) =>
-    get<AccuracyResponse>("accuracy", cutoff ? { cutoff } : {});
+// All options are optional: without dates, the whole month is used.
+export const getAccuracy = (options: { cutoff?: string; from?: string; to?: string } = {}) =>
+    get<AccuracyResponse>("accuracy", {
+        ...(options.cutoff ? { cutoff: options.cutoff } : {}),
+        ...(options.from ? { delivery_from: options.from } : {}),
+        ...(options.to ? { delivery_to: options.to } : {}),
+    });
