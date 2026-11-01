@@ -6,8 +6,10 @@ Web application for the buying team of a UK energy utility. For a purchase decis
 - Scope: purchase decisions made in **January 2026** (delivery days 2 January to 1 February 2026).
 - Stack: Python (Django REST Framework) API, React + TypeScript front end (Vite, Recharts), Docker.
 
-**Live app:** _add the Vercel URL of the front end_
-**API:** _add the Vercel URL of the backend_ (try `/api/meta/`)
+**Live app:** https://a3b917f8.vercel.app
+
+**API:** https://wind-challenge.vercel.app (try `/api/meta/`)
+
 **Demo video:** _add the unlisted YouTube link_
 
 ## What the application shows
