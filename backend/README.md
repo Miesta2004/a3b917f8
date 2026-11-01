@@ -27,7 +27,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
 python scripts/ingest_elexon.py        # once: needs internet access to Elexon
-python manage.py test                  # 17 tests
+python manage.py test                  # 20 tests
 python manage.py runserver             # http://127.0.0.1:8000/api/meta/
 ```
 
@@ -61,11 +61,11 @@ Metrics: MAE, RMSE, bias, and wMAPE (total absolute error as a percentage of tot
 
 Set the Vercel project root to this directory. `vercel.json` routes every request to `api/index.py`, which exposes the Django WSGI app, and bundles `data/`. Vercel does not run Docker, so the Dockerfile is for local use only.
 
-Live app: _add the Vercel URL here_
+Live app and front end: see the [main README](../README.md)
 
 ## AI tools
 
-_Describe here which AI tools were used (required by the challenge)._
+See the [main README](../README.md#ai-tools)
 
 ## Data attribution
 

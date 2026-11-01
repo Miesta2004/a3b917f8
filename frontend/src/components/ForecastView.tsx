@@ -2,15 +2,20 @@ import { useEffect, useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { getAccuracy, getForecast, type AccuracyResponse, type ForecastResponse } from "../api";
 
-type Props = { minDate: string; maxDate: string; defaultCutoff: string };
+type Props = {
+    minDate: string;
+    maxDate: string;
+    date: string;
+    cutoff: string;
+    onDateChange: (date: string) => void;
+    onCutoffChange: (cutoff: string) => void;
+};
 type Result = { key: string; forecast?: ForecastResponse; accuracy?: AccuracyResponse; error?: string };
 
 const mw = (v: number | null) => (v === null ? "–" : `${Math.round(v).toLocaleString("en-GB")} MW`);
 const signed = (v: number | null) => (v === null ? "–" : `${v > 0 ? "+" : ""}${Math.round(v).toLocaleString("en-GB")} MW`);
 
-export default function ForecastView({ minDate, maxDate, defaultCutoff }: Props) {
-    const [date, setDate] = useState("2026-01-15");
-    const [cutoff, setCutoff] = useState(defaultCutoff);
+export default function ForecastView({ minDate, maxDate, date, cutoff, onDateChange, onCutoffChange }: Props) {
     const [result, setResult] = useState<Result | null>(null);
 
     // One request key per (date, deadline). A result is only shown if it matches the current key,
@@ -41,17 +46,17 @@ export default function ForecastView({ minDate, maxDate, defaultCutoff }: Props)
     }));
 
     return (
-        <section>
+        <section id="forecast">
             <h2>Forecast available at the purchase deadline</h2>
 
             <div className="controls">
                 <label>
                     Delivery day
-                    <input type="date" value={date} min={minDate} max={maxDate} onChange={(e) => setDate(e.target.value)} />
+                    <input type="date" value={date} min={minDate} max={maxDate} onChange={(e) => onDateChange(e.target.value)} />
                 </label>
                 <label>
                     Purchase deadline (UK time, day before)
-                    <input type="time" value={cutoff} onChange={(e) => setCutoff(e.target.value)} />
+                    <input type="time" value={cutoff} onChange={(e) => onCutoffChange(e.target.value)} />
                 </label>
             </div>
 

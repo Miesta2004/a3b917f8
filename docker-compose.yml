@@ -1,0 +1,16 @@
+# Runs the whole application: API on :8000, web app on :8080.
+# Run `python scripts/ingest_elexon.py` in backend/ first only if backend/data/ is missing.
+services:
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/data:/app/data:ro
+
+  web:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
